@@ -12,4 +12,4 @@
 2. masukkan pass wifi
 3. edit ipv4 jadi manual
 4. `systemctl restart NetworkManager`
-5. done
+5. coba `curl https://google.com` klo sukses berarti lancar
