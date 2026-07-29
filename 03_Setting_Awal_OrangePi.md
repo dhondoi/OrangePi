@@ -1,3 +1,9 @@
+# update
+
+```cmd
+apt update
+```
+
 # pengaturan waktu
 
 ```cmd
