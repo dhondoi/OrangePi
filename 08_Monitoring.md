@@ -1,116 +1,81 @@
-# Beszel menggunakan arsitektur **Hub & Agent**:
+## Langkah 1: Install Uptime Kuma (via Docker Compose)
 
-1. **Beszel Hub**: Dashboard utama tempat kamu melihat grafik.
-2. **Beszel Agent**: Layanan kecil yang berjalan di Orange Pi untuk mengirim data ke Hub (Hub dan Agent bisa dipasang di satu Orange Pi yang sama).
-
-Cara paling mudah dan direkomendasikan untuk memasang Beszel adalah menggunakan **Docker & Docker Compose**.
-
----
-
-## Langkah 1: Install Docker di Orange Pi (Jika Belum Ada)
-
-Jalankan perintah ini di terminal SSH Orange Pi kamu untuk menginstal Docker dengan cepat:
+Buat folder khusus untuk Uptime Kuma di Orange Pi kamu:
 
 ```bash
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-
-```
-
----
-
-## Langkah 2: Menyiapkan File Configuration (Docker Compose)
-
-Buat folder khusus untuk Beszel dan masuk ke foldernya:
-
-```bash
-mkdir ~/beszel && cd ~/beszel
+mkdir ~/uptime-kuma && cd ~/uptime-kuma
 nano docker-compose.yml
 
 ```
 
-Salin (*copy*) dan tempel (*paste*) konfigurasi `docker-compose.yml` berikut:
+Tempel (*paste*) konfigurasi berikut:
 
 ```yaml
 services:
-  beszel:
-    image: 'henrygd/beszel:latest'
-    container_name: 'beszel'
-    restart: unless-stopped
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: always
     ports:
-      - '8090:8090'
+      - '3001:3001'
     volumes:
-      - ./beszel_data:/beszel_data
-
-  beszel-agent:
-    image: 'henrygd/beszel-agent:latest'
-    container_name: 'beszel-agent'
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      PORT: 45876
-      KEY: 'PASTE_PUBLIC_KEY_DI_SINI'
+      - ./uptime-kuma-data:/app/data
 
 ```
 
-> ⚠️ **PENTING:** Jangan jalankan dulu! Kita butuh mengisi `KEY` (Public Key) pada variabel `KEY` di atas terlebih dahulu melalui dashboard Beszel.
+Jalankan container-nya:
 
----
-
-## Langkah 3: Jalankan Beszel Hub Terlebih Dahulu
-
-1. Hapus dulu bagian `beszel-agent` sementara atau cukup jalankan container `beszel` saja dengan perintah:
 ```bash
-sudo docker run -d \
-  --name beszel \
-  --restart unless-stopped \
-  -p 8090:8090 \
-  -v ./beszel_data:/beszel_data \
-  henrygd/beszel:latest
+sudo docker compose up -d
 
 ```
 
-
-2. Buka browser di Laptop/HP kamu, lalu akses:
-`http://IP_ORANGE_PI_KAMU:8090`
-*(Contoh: `http://192.168.1.50:8090`)*
-3. **Buat akun administrator** pertama kamu (Username/Email & Password).
-4. Di dashboard Beszel:
-* Klik tombol **Add System** / **+**.
-* Masukkan nama Orange Pi kamu (misal: `Orange-Pi`).
-* Masukkan Host/IP Orange Pi kamu (misal: `localhost` atau IP lokalnya).
-* Kamu akan melihat baris **Public Key** yang dimunculkan di layar. **Salin (copy) kunci tersebut!**
-
-
+> **Cek Akses Lokal:** > Buka browser dan akses `http://IP_ORANGE_PI_KAMU:3001`. Kamu akan diminta untuk membuat akun **Admin** pertama kali.
 
 ---
 
-## Langkah 4: Jalankan Agent Menggunakan Public Key
+## Langkah 2: Hubungkan ke Cloudflare Tunnel (Supaya BISA DIPAMERKAN)
 
-Setelah mendapatkan Public Key dari dashboard:
+Supaya status page kamu bisa diakses siapa saja di internet tanpa perlu *login*:
 
-1. Jalankan perintah agent di bawah ini di terminal Orange Pi (ganti `PASTE_PUBLIC_KEY_DI_SINI` dengan kunci yang kamu salin tadi):
-```bash
-sudo docker run -d \
-  --name beszel-agent \
-  --restart unless-stopped \
-  --network host \
-  -v /var/run/docker.sock:/var/run/docker.sock:ro \
-  -e PORT=45876 \
-  -e KEY="PASTE_PUBLIC_KEY_DI_SINI" \
-  henrygd/beszel-agent:latest
-
-```
+1. Buka dashboard **Cloudflare Zero Trust** (`dash.teams.cloudflare.com`).
+2. Masuk ke menu **Networks** > **Tunnels**.
+3. Pilih Tunnel kamu, lalu klik **Edit**.
+4. Tambahkan **Public Hostname** baru:
+* **Subdomain:** `status`
+* **Domain:** `dhondoi.online`
+* **Service Type:** `HTTP`
+* **URL:** `localhost:3001` (atau IP Lokal Orange Pi kamu `:3001`)
 
 
-2. Kembali ke browser dan simpan pengaturan di dashboard Beszel.
+5. Klik **Save hostname**.
 
 ---
 
-## Selesai! 🎉
+## Langkah 3: Membuat Public Status Page (Halaman Pamer)
 
-Dalam beberapa detik, status Orange Pi di dashboard Beszel kamu akan berubah menjadi **Connected** (Hijau), dan kamu bisa langsung memantau suhu CPU, RAM, Disk, hingga penggunaan Docker container secara *real-time*!
+Ini fitur utamanya! Kamu bisa membuat halaman status cantik tanpa perlu memberikan akses ke dashboard admin kamu:
 
-Apakah kamu mengalami kendala saat install Docker atau saat membuat containernya?
+1. Buka dashboard Uptime Kuma kamu (`http://IP_ORANGE_PI_KAMU:3001`).
+2. Tambahkan dulu monitor yang mau dipamerkan (misal: Website Laravel kamu, Ping Orange Pi, Nginx, Port MySQL, dll) lewat tombol **Add New Monitor**.
+3. Setelah monitor dibuat, klik menu **Status Pages** di bagian atas menu.
+4. Klik **New Status Page**.
+5. Isi data:
+* **Title:** *OrangePi Server Status* (atau bebas sesuai selera).
+* **URL Slug:** `status` atau biarkan default.
+
+
+6. Pilih monitor mana saja yang ingin kamu tampilkan ke publik.
+7. Kamu juga bisa ganti Theme (Dark Mode keren banget!), masukkan custom CSS, atau upload logo pribadi/profil.
+8. Klik **Save**.
+
+---
+
+## Hasil Akhir 🎉
+
+Sekarang siapa saja yang membuka URL domain kamu:
+👉 **`https://status.dhondoi.online`**
+
+Akan langsung melihat **halaman indikator hijau menyala**, grafik *uptime* 30 hari, *response time* (ping ms), dan status *real-time* dari Orange Pi kamu **secara publik tanpa perlu login**!
+
+Cocok banget buat dipasang di link bio Instagram, GitHub profile, atau dibagikan ke teman-teman komunitas!
