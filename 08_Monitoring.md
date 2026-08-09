@@ -30,7 +30,16 @@ Jalankan container-nya:
 sudo docker compose up -d
 
 ```
+Berikut perintah alternatifnya yang setara dengan file YAML kamu:
 
+```Bash
+docker run -d \
+  --name uptime-kuma \
+  --restart always \
+  -p 3001:3001 \
+  -v $(pwd)/uptime-kuma-data:/app/data \
+  louislam/uptime-kuma:1
+```  
 > **Cek Akses Lokal:** > Buka browser dan akses `http://IP_ORANGE_PI_KAMU:3001`. Kamu akan diminta untuk membuat akun **Admin** pertama kali.
 
 ---
