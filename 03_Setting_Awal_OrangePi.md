@@ -12,6 +12,7 @@ timedatectl set-time "2026-07-29 13:03:00"
 sudo timedatectl set-ntp true
 sudo hwclock --systohc
 sudo timedatectl set-local-rtc 1 --adjust-system-clock
+sudo systemctl restart systemd-timesyncd
 ```
 
 # Aktifkan Bash
