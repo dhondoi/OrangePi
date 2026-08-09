@@ -9,6 +9,8 @@ apt update
 ```cmd
 timedatectl set-timezone Asia/Jakarta
 timedatectl set-time "2026-07-29 13:03:00"
+sudo timedatectl set-ntp true
+sudo hwclock --systohc
 ```
 
 # Aktifkan Bash
