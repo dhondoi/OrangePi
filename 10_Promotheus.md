@@ -22,8 +22,9 @@ docker run -d \
   -v "/:/host:ro,rslave" \
   quay.io/prometheus/node-exporter:latest \
   --path.rootfs=/host
-Port bawaan: 9100
 ```
+Port bawaan: 9100
+
 2. Prometheus Engine (Aplikasi Utama Prometheus)
 Sebelum menjalankan Prometheus, kita perlu membuat file konfigurasi kecil dulu bernama prometheus.yml.
 
