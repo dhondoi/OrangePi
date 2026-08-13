@@ -6,6 +6,7 @@
 4. cek pada cmd `arp -a`
 5. jika ada ip lain pada pada interface ip pc, coba ping.
 6. atau ada interface network lain, cek list ip kemungkinan itu.
+7. ketik cmd `ssh root@<ip_yang_ketemu>` untuk pass `orangepi`
 
 # membuat wifi menjadi ip statis
 
