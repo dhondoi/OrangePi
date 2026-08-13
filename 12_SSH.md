@@ -52,6 +52,7 @@ ssh -i ~/.ssh/<nama_file_yang_dicopy> root@<ip> -p <port>
 3. `PasswordAuthentication no` Mematikan login password untuk semua akun (root maupun user biasa). Wajib pakai SSH Key.
 - restart
 ```bash
+sshd -t
 sudo systemctl restart sshd
 ```
 ---
