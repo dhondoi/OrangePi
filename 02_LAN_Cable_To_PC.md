@@ -5,6 +5,7 @@
 3. pilih wifi (klik kanan) > properties > tab sharing, centang allow
 4. cek pada cmd `arp -a`
 5. jika ada ip lain pada pada interface ip pc, coba ping.
+6. atau ada interface network lain, cek list ip kemungkinan itu.
 
 # membuat wifi menjadi ip statis
 
