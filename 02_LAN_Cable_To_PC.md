@@ -13,5 +13,8 @@
 1. ketik `nmtui`
 2. masukkan pass wifi
 3. edit ipv4 jadi manual
-4. `systemctl restart NetworkManager`
-5. coba `curl https://google.com` klo sukses berarti lancar
+4. addresses `192.168.x.xxx`
+5. Gateway `192.168.0.1 atau 192.168.1.1`
+6. DNS `8.8.8.8 dan 1.1.1.1`
+7. `systemctl restart NetworkManager`
+8. coba `curl https://google.com` klo sukses berarti lancar
