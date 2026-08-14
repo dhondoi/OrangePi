@@ -13,11 +13,11 @@ ssh-keygen -t rsa -b 4096 -C "email_anda@example.com"
 - Copy SSH
   - Cara 1 : Menggunakan command
     ```bash
-    ssh-copy-id -p <port> root@IP_SERVER_ANDA`
+    ssh-copy-id -p <port> root@IP_SERVER_ANDA
     ```
     - jika saat membuat keygen nama filenya diubah
     ```bash
-    ssh-copy-id -i <direktori_file_ssh>.pub -p <port> root@IP_SERVER_ANDA`
+    ssh-copy-id -i <direktori_file_ssh>.pub -p <port> root@IP_SERVER_ANDA
 
     # contoh:
     # ssh-copy-id -i ~/.ssh/inikeygen.pub -p <2012> root@112.112.211.123`
