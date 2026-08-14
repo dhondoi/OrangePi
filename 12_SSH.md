@@ -1,6 +1,6 @@
 
 ---
-# SSH TANPA PASSWORD FOR ROOT
+# SSH TANPA PASSWORD
 - Buka CMD di Komputer pada direktori ssh `/Users/<nama_user>/.ssh`, untuk menghindari salah penempatan direktori saat pembuatan keygen.
 - Gunakan Ed25519 untuk semua kebutuhan modern (Default pilihan utama):
 ```Bash
